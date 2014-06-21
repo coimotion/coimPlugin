@@ -310,5 +310,5 @@ var coimPlugin = {
                 [{"relativeURL":relativeURL, "param":params, "files": files}]);
     }
 }
-
+var coim = coimPlugin;
 module.exports = coimPlugin;
