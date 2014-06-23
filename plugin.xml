@@ -11,14 +11,14 @@
 	
     <description>Plugin to connect COIMOTION SDK</description>
     
-	<asset src="www/coimPlugin.js" target="js/coim.js" />
-    <!--js-module src="www/coimPlugin.js" name="coim">
+	<!--asset src="www/coimPlugin.js" target="js/coim.js" /-->
+    <js-module src="www/coimPlugin.js" name="coim">
         <clobbers target="coim" />
     </js-module>
     
     <js-module src="www/coimPlugin.js" name="coim">
         <clobbers target="coimPlugin" />
-    </js-module-->
+    </js-module>
     
     <platform name="android">
         <config-file target="config.xml" parent="/widget/plugin">
