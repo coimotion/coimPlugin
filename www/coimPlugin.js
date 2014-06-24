@@ -24,10 +24,10 @@ var callbackMapping = function(success, fail, invalid, progress, response){
         else if(response['type'] === "fail") {
             success.fail(response['result']);
         }
-        else if(response['type'] === "invalid" && (invalid !== undefined && invalid !== null)) {
+        else if(response['type'] === "invalid") {
             success.invalid();
         }
-        else if(response['type'] === "progress" && (progress !== undefined && progress !== null)) {
+        else if(response['type'] === "progress") {
             success.progress(response['result']);
         }
     }
