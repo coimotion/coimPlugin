@@ -95,7 +95,7 @@ var coimPlugin = {
             _success = args[1];
         }
         else {
-            if(typeof args[1] === "object") {
+            if(typeof args[1] === "object" && args[1] !== null) {
                 _params = args[1];
                 _success = args[2];
                 _fail = args[3];
