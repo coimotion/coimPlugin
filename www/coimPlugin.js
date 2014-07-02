@@ -289,7 +289,7 @@ var coimPlugin = {
         if(typeof args[3] === "function") {
             _success = args[3];
             _fail = args[4];
-            _invalid = args[5];
+            _progress = args[5];
         }
         else if (args[3] instanceof coimCallback) {
             _success = args[3];
