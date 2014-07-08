@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 
-#define sdk_version @"0.9.5"
+#define sdk_version @"0.9.6"
 
 @interface coimSDK : NSObject
-
+//@property double timeoutInterval;
 struct attachType {
     __unsafe_unretained NSString * NICON;
     __unsafe_unretained NSString * NFILE;
@@ -54,6 +54,8 @@ extern const NSString *reqigsterConnLabel;
                               To:(NSString *)relativeURL
                       withParams:(NSDictionary *)params
                         delegate:(id)aDelegate;
+
++ (BOOL) checkNetwork;
 
 + (void) alertMessage:(NSString *)msg;
 

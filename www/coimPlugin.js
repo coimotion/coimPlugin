@@ -32,7 +32,6 @@ var callbackMapping = function(success, fail, invalid, progress, response){
         }
     }
     else {
-        
         if(response['type'] === "success") {
             success(response['result']);
         }
@@ -70,6 +69,26 @@ var coimPlugin = {
             "coimPlugin",
             "getToken",
             []);
+    },
+    checkNetwork: function(success) {
+        cordova.exec(
+                     function(token) {
+                     console.log("check network: " + token);
+                     if(token['type'] === "checkNetwork") {
+                        if(token['result'] == "true")
+                            success(true);
+                        else
+                            success(false);
+                     }
+                     else
+                        success(null);
+                     },
+                     function(error) {
+                        success(null);
+                     },
+                     "coimPlugin",
+                     "checkNetwork",
+                     []);
     },
     send: function(relativeURL, params, success, fail, invalid){
         var args = arguments,

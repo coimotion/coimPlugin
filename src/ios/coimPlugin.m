@@ -13,35 +13,58 @@
 @synthesize command = _command;
 
 - (void) getToken:(CDVInvokedUrlCommand *)command
-    {
-        _command = command;
-        [coimSDK initSDK:^(NSError *error){
-            if (error) {
-                [self.commandDelegate runInBackground:^{
-                    CDVPluginResult *pluginResult;
-                    pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
-                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-                }];
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult;
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            NSString *token = [coimSDK getToken];
+            if([token isEqualToString:@""]) {
+                token = nil;
             }
-            else {
-                NSString *token = [coimSDK getToken];
-                if([token isEqualToString:@""]) {
-                    token = nil;
-                }
-                NSMutableDictionary *pluginResult = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"token", @"type", [coimSDK getToken], @"result", nil];
-                [self.commandDelegate runInBackground:^{
-                    CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:pluginResult];
-                    [result setKeepCallbackAsBool:YES];
-                    [self.commandDelegate sendPluginResult:result callbackId:_command.callbackId];
-                }];
-                
-                //CDVPluginResult *pluginResult;
-                //pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[coimSDK getToken]];
-                //[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
-            }
-        }];
-    }
-    
+            NSMutableDictionary *pluginResult = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"token", @"type", [coimSDK getToken], @"result", nil];
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:pluginResult];
+                [result setKeepCallbackAsBool:YES];
+                [self.commandDelegate sendPluginResult:result callbackId:_command.callbackId];
+            }];
+            
+            //CDVPluginResult *pluginResult;
+            //pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsString:[coimSDK getToken]];
+            //[self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+        }
+    }];
+}
+
+- (void) checkNetwork:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult;
+                pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            NSString *network = [coimSDK checkNetwork]? @"true":@"false";
+            NSMutableDictionary *pluginResult = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"checkNetwork", @"type", network, @"result", nil];
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:pluginResult];
+                [result setKeepCallbackAsBool:YES];
+                [self.commandDelegate sendPluginResult:result callbackId:_command.callbackId];
+            }];
+        }
+    }];
+}
+
 - (void) send:(CDVInvokedUrlCommand *)command
 {
     _command = command;

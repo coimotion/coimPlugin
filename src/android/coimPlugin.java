@@ -27,6 +27,7 @@ public class coimPlugin extends CordovaPlugin{
 	private static final String ACTION_UPDPASSWD = "updPasswd";
 	private static final String ACTION_ATTACH = "attach";
 	private static final String ACTION_GET_TOKEN = "getToken";
+    private static final String ACTION_CHECK_NETWORK = "checkNetwork";
 	
 	private CallbackContext mCallbackContext;
 	
@@ -36,8 +37,15 @@ public class coimPlugin extends CordovaPlugin{
 		if (ACTION_GET_TOKEN.equals(action)) {
 			try {
 				ReqUtil.initSDK(this.cordova.getActivity().getApplication());
-			} catch (COIMException e1) {
 			} catch (Exception e1) {
+				JSONObject result = new JSONObject();
+				try {
+					result.put("type", "fail");
+					result.put("result",""+e1.getLocalizedMessage());
+				} catch (JSONException e) {}
+				PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
+				pluginResult.setKeepCallback(true);
+				mCallbackContext.sendPluginResult(pluginResult);
 			}
         	cordova.getThreadPool().execute(new Runnable() {
 	            public void run() {
@@ -54,6 +62,37 @@ public class coimPlugin extends CordovaPlugin{
 	            }});
 			return true;
         }
+        
+        if (ACTION_CHECK_NETWORK.equals(action)) {
+			try {
+				ReqUtil.initSDK(this.cordova.getActivity().getApplication());
+			} catch (Exception e1) {
+				JSONObject result = new JSONObject();
+				try {
+					result.put("type", "fail");
+					result.put("result",""+e1.getLocalizedMessage());
+				} catch (JSONException e) {}
+				PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
+				pluginResult.setKeepCallback(true);
+				mCallbackContext.sendPluginResult(pluginResult);
+			}
+        	cordova.getThreadPool().execute(new Runnable() {
+	            public void run() {
+	            	final JSONObject result = new JSONObject();
+	            	String network = ReqUtil.checkNetwork()?"true":"false";
+					try {
+						result.put("type", "checkNetwork");
+						result.put("result", network);
+					} catch (JSONException e) {
+						e.printStackTrace();
+					}
+					PluginResult pluginResult = new PluginResult(PluginResult.Status.OK, result);
+					pluginResult.setKeepCallback(true);
+					mCallbackContext.sendPluginResult(pluginResult);
+	            }});
+			return true;
+        }
+        
 		try {
 			ReqUtil.initSDK(this.cordova.getActivity().getApplication());
 			final String relativeURL = args.getJSONObject(0).getString("relativeURL");
