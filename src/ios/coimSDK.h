@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 
-#define sdk_version @"0.9.6"
+#define sdk_version @"0.9.6.1"
 
 @interface coimSDK : NSObject
 //@property double timeoutInterval;
