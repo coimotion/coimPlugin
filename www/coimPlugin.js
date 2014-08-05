@@ -132,6 +132,10 @@ var coimPlugin = {
             }
         }
         
+        for(var key in _params) {
+            if(typeof _params[key] !== "string")
+                _params[key] = JSON.stringify(_params[key]);
+        }
 
         cordova.exec(
             function(winParam) {
@@ -312,6 +316,17 @@ var coimPlugin = {
         }
         else if (args[3] instanceof coimCallback) {
             _success = args[3];
+        }
+        
+        if(_files.length === 0) {
+            if(_params['dataURI']) {
+                coim.send(relativeURL, _params, success, fail, progress);
+
+            }
+            else {
+                alert("(coim plugin) no file to upload.");
+            }
+            return;
         }
         
         cordova.exec(

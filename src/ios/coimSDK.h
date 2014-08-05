@@ -9,10 +9,10 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 
-#define sdk_version @"0.9.6.1"
+
+#define sdk_version @"0.9.6.2"
 
 @interface coimSDK : NSObject
-//@property double timeoutInterval;
 struct attachType {
     __unsafe_unretained NSString * NICON;
     __unsafe_unretained NSString * NFILE;
