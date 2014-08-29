@@ -9,8 +9,7 @@
 #import <Foundation/Foundation.h>
 #import <CommonCrypto/CommonDigest.h>
 
-
-#define sdk_version @"0.9.6.2"
+#define sdk_version @"0.9.6.3"
 
 @interface coimSDK : NSObject
 struct attachType {
@@ -22,11 +21,11 @@ struct attachType {
 };
     
 extern const struct attachType nType;
-extern const NSString *registerURL;
-extern const NSString *activateURL;
-extern const NSString *logoutURL;
-extern const int maxFileSize;
-extern const NSString *reqigsterConnLabel;
+//extern const NSString *registerURL;
+//extern const NSString *activateURL;
+//extern const NSString *logoutURL;
+//extern const int maxFileSize;
+//extern const NSString *reqigsterConnLabel;
 
 + (void)initSDK:(void (^)(NSError *))errBlock;
 
@@ -70,4 +69,28 @@ extern const NSString *reqigsterConnLabel;
 + (NSString *)getToken;
     
 + (void)clearToken;
+
+//+ (void)checkFBWithDelegate:(id)aDelegate;
+//+ (void)FBLoginFromVC:(UIViewController *)VC;
+@end
+
+@protocol coimDelegate <NSObject>
+@optional
+// map to ?
+- (void)coimConnection:(NSURLConnection *)connection
+        didReceiveData:(NSData *)data;
+
+// map to onFail
+- (void)coimConnection:(NSURLConnection *)connection
+      didFailWithError:(NSError *)error;
+
+// map to onSuccess
+- (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
+                              withData:(NSDictionary *)responseData;
+
+// map to onInvalid
+- (void)coimConnectionInvalidToken:(NSURLConnection *)connection;
+
+// map to onProgress
+- (void)coimConnection:(NSURLConnection *)connection progress:(float)percentage;
 @end

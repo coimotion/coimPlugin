@@ -8,7 +8,7 @@
 
 #import <Foundation/Foundation.h>
 #import <Cordova/CDVPlugin.h>
-#import "coimSDK.h"
+
 
 @interface coimPlugin : CDVPlugin
 

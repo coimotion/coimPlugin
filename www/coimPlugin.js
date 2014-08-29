@@ -342,6 +342,227 @@ var coimPlugin = {
                 "coimPlugin",
                 "attach", 
                 [{"relativeURL":relativeURL, "param":params, "files": files}]);
+    },
+    
+    SWS: {
+        checkFB: function(scope, success, fail){
+            var param = {"relativeURL":"", "param":{}};
+            var _success, _fail;
+            if( typeof scope === "string"){
+                if(scope !== "")
+                    param.scope = scope;
+                else
+                    param.scope = "public_profile";
+                _success = success;
+                _fail =fail;
+            }
+            else {
+                param.scope = "public_profile";
+                _success = scope;
+                _fail = success;
+            }
+            
+            cordova.exec(
+                         function(winParam) {
+                            callbackMapping(_success, _fail, null, null, winParam);
+                         },
+                         function(error) {
+                            if(_fail !== undefined)
+                                _fail(error);
+                            else
+                                _success.fail(error);
+                         },
+                         "coimPlugin",
+                         "checkFB",
+                         [param]);
+        },
+        loginFB: function(scope,success, fail){
+            var param = {"relativeURL":"", "param":{}};
+            var _success, _fail;
+            if( typeof scope === "string"){
+                if(scope !== "")
+                    param.scope = scope;
+                else
+                    param.scope = "public_profile";
+                _success = success;
+                _fail =fail;
+            }
+            else {
+                param.scope = "public_profile";
+                _success = scope;
+                _fail = success;
+            }
+            
+            cordova.exec(
+                         function(winParam) {
+                            callbackMapping(_success, _fail, null, null, winParam);
+                         },
+                         function(error) {
+                            if(_fail !== undefined)
+                                _fail(error);
+                            else
+                                _success.fail(error);
+                            },
+                            "coimPlugin",
+                            "loginFB",
+                            [param]);
+        },
+        FBPostMessage: function(message, success, fail) {
+            var param = {"relativeURL":"", "param":{}};
+            param.message = message;
+            cordova.exec(
+                        function(winParam) {
+                            callbackMapping(success, fail, null, null, winParam);
+                        },
+                        function(error) {
+                            if(fail !== undefined)
+                                fail(error);
+                            else
+                                success.fail(error);
+                        },
+                        "coimPlugin",
+                        "FBPostMessage",
+                        [param]);
+        },
+        FBPostPhoto: function(params, success, fail) {
+            var param = {"relativeURL":"", "param":params};
+            var _success, _fail;
+            
+            //param.imageSource = imageSource;
+            
+            //if("string" === typeof message) {
+            //    if (message != "")
+            //        param.message = message;
+            _success = success;
+            _fail = fail;
+            /*}
+            else {
+                _success = message;
+                _fail = success;
+            }*/
+            
+            cordova.exec(
+                         function(winParam) {
+                            callbackMapping(_success, _fail, null, null, winParam);
+                         },
+                         function(error) {
+                            if(_fail !== undefined)
+                                _fail(error);
+                            else
+                                _success.fail(error);
+                         },
+                         "coimPlugin",
+                         "FBPostPhoto",
+                         [param]);
+        },
+        FBGraph: function(params, success, fail) {
+            cordova.exec(
+                         function(winParam) {
+                            callbackMapping(success, fail, null, null, winParam);
+                         },
+                         function(error) {
+                            if(fail !== undefined)
+                                fail(error);
+                            else
+                                success.fail(error);
+                            },
+                            "coimPlugin",
+                            "FBGraph",
+                            [{"param":params, "relativeURL":""}]);
+        },
+        
+        checkGL: function(scope, success, fail){
+            
+            var param = {"relativeURL":"", "param":{}};
+            var _success, _fail;
+            if( typeof scope === "string"){
+                if(scope !== "")
+                    param.scope = scope;
+                else
+                    param.scope = "https://www.googleapis.com/auth/plus.login";
+                _success = success;
+                _fail =fail;
+            }
+            else {
+                param.scope = "https://www.googleapis.com/auth/plus.login";
+                _success = scope;
+                _fail = success;
+            }
+            cordova.exec(
+                         function(winParam) {
+                            callbackMapping(_success, _fail, null, null, winParam);
+                         },
+                         function(error) {
+                            if(_fail !== undefined)
+                                _fail(error);
+                            else
+                                _success.fail(error);
+                         },
+                         "coimPlugin",
+                         "checkGL",
+                         [param]);
+        },
+        loginGL: function(scope,success, fail){
+            var param = {"relativeURL":"", "param":{}};
+            var _success, _fail;
+            if( typeof scope === "string"){
+                if(scope != "")
+                    param.scope = scope;
+                else
+                    param.scope = "https://www.googleapis.com/auth/plus.login";
+                _success = success;
+                _fail =fail;
+            }
+            else {
+                param.scope = "https://www.googleapis.com/auth/plus.login";
+                _success = scope;
+                _fail = success;
+            }
+            cordova.exec(
+                         function(winParam) {
+                            callbackMapping(_success, _fail, null, null, winParam);
+                         },
+                         function(error) {
+                            if(_fail !== undefined)
+                                _fail(error);
+                            else
+                                _success.fail(error);
+                         },
+                         "coimPlugin",
+                         "loginGL",
+                         [param]);
+        },
+        googlePlus: function(params, success, fail) {
+            cordova.exec(
+                         function(winParam) {
+                         callbackMapping(success, fail, null, null, winParam);
+                         },
+                         function(error) {
+                         if(fail !== undefined)
+                         fail(error);
+                         else
+                         success.fail(error);
+                         },
+                         "coimPlugin",
+                         "googlePlus",
+                         [{"param":params, "relativeURL":""}]);
+        },
+        checkLogin: function(success, fail) {
+            cordova.exec(
+                         function(winParam) {
+                         callbackMapping(success, fail, null, null, winParam);
+                         },
+                         function(error) {
+                         if(fail !== undefined)
+                         fail(error);
+                         else
+                         success.fail(error);
+                         },
+                         "coimPlugin",
+                         "checkLogin",
+                         [{"relativeURL":"", "param":{}}]);
+        }
+        
     }
 }
 var coim = coimPlugin;

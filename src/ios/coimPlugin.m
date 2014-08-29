@@ -8,6 +8,8 @@
 
 #import "coimPlugin.h"
 #import <Cordova/CDV.h>
+#import "coimSDK.h"
+#import "coimSWS.h"
 
 @implementation coimPlugin
 @synthesize command = _command;
@@ -222,17 +224,20 @@
 - (void)coimConnection:(NSURLConnection *)connection
       didFailWithError:(NSError *)error
 {
-        NSMutableDictionary *pluginResult = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"fail", @"type", [error localizedDescription], @"result", nil];
-        [self.commandDelegate runInBackground:^{
-            CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:pluginResult];
-            [result setKeepCallbackAsBool:YES];
-            [self.commandDelegate sendPluginResult:result callbackId:_command.callbackId];
-        }];
+    NSLog(@"fail in plugin connection delegate: %@", [error localizedDescription] );
+    NSMutableDictionary *pluginResult = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"fail", @"type", [error localizedDescription], @"result", nil];
+    [self.commandDelegate runInBackground:^{
+        NSLog(@"fail in plugin connection delegate, run in background");
+        CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:pluginResult];
+        [result setKeepCallbackAsBool:YES];
+        [self.commandDelegate sendPluginResult:result callbackId:_command.callbackId];
+    }];
 }
 // map to onSuccess
 - (void)coimConnectionDidFinishLoading:(NSURLConnection *)connection
                               withData:(NSDictionary *)responseData
 {
+    NSLog(@"success in plugin connection delegate: %@", responseData);
     NSMutableDictionary *pluginResult = [[NSMutableDictionary alloc] initWithObjectsAndKeys:@"success", @"type", responseData, @"result", nil];
     [self.commandDelegate runInBackground:^{
         CDVPluginResult *result = [CDVPluginResult resultWithStatus:CDVCommandStatus_OK messageAsDictionary:pluginResult];
@@ -266,5 +271,241 @@
         }];
     //}];
 }
+
+// sws methods
+
+- (void) checkFB:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS checkFBWithDelegate:self andScope:[dic objectForKey:@"scope"]];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) loginFB:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS FBLoginFromVC:self.viewController withDelegate:self andScope:[dic objectForKey:@"scope"]];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) FBPostMessage:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS FBPostMessage:[dic objectForKey:@"message"] delegate:self];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) FBPostPhoto:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS FBPostPhoto:[dic objectForKey:@"param"] delegate:self];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) FBGraph:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS FBGraph:[dic objectForKey:@"param"] delegate:self];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) checkGL:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS checkGLWithDelegate:self andScope:[dic objectForKey:@"scope"]];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) loginGL:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS GLLoginFromVC:self.viewController withDelegate:self andScope:[dic objectForKey:@"scope"]];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) googlePlus:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    NSDictionary *dic = [[NSDictionary alloc] initWithDictionary:[command.arguments objectAtIndex:0]];
+                    [coimSWS GooglePlus:[dic objectForKey:@"param"] delegate:self];
+                }
+            }];
+            
+        }
+    }];
+}
+
+- (void) checkLogin:(CDVInvokedUrlCommand *)command
+{
+    _command = command;
+    [coimSDK initSDK:^(NSError *error){
+        if (error) {
+            [self.commandDelegate runInBackground:^{
+                CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+            }];
+        }
+        else {
+            [coimSWS initSWS:^(NSError *error){
+                if(error) {
+                    CDVPluginResult *pluginResult = [CDVPluginResult resultWithStatus:CDVCommandStatus_ERROR messageAsString:[error localizedDescription]];
+                    [self.commandDelegate sendPluginResult:pluginResult callbackId:command.callbackId];
+                }
+                else {
+                    [coimSWS checkLogin:self];
+                }
+            }];
+            
+        }
+    }];
+}
+
 
 @end
